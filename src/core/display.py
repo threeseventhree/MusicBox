@@ -10,76 +10,43 @@ from rich.style import Style
 
 
 console = Console()
-
-def imageToText(image, width=60):
-    # Braille uses 2x4 pixels per character
+def imageToText(image, width=30):
     aspect_ratio = image.height / image.width
 
-    height = int(width * aspect_ratio * 4)
+    # Two vertical pixels are represented by one terminal character.
+    height = int(width * aspect_ratio)
 
     image = image.resize(
-        (width * 2, height),
-        Image.Resampling.LANCZOS
+        (width, height),
+        Image.Resampling.BOX
     ).convert("RGB")
 
     text = Text()
 
-    # Braille dot positions
-    dots = {
-        (0, 0): 0,
-        (0, 1): 1,
-        (0, 2): 2,
-        (1, 0): 3,
-        (1, 1): 4,
-        (1, 2): 5,
-        (0, 3): 6,
-        (1, 3): 7,
-    }
+    for y in range(0, height - 1, 2):
+        for x in range(width):
 
-    for y in range(0, image.height - 3, 4):
-        for x in range(0, image.width - 1, 2):
+            top = image.getpixel((x, y))
+            bottom = image.getpixel((x, y + 1))
 
-            braille = 0
-            colors = []
+            topColor = (
+                f"rgb({top[0]},{top[1]},{top[2]})"
+            )
 
-            for dy in range(4):
-                for dx in range(2):
+            bottomColor = (
+                f"rgb({bottom[0]},{bottom[1]},{bottom[2]})"
+            )
 
-                    pixel = image.getpixel((x + dx, y + dy))
+            style = Style(
+                color=topColor,
+                bgcolor=bottomColor
+            )
 
-                    # Brightness
-                    brightness = (
-                        0.299 * pixel[0]
-                        + 0.587 * pixel[1]
-                        + 0.114 * pixel[2]
-                    )
-
-                    # Decide whether this pixel should be visible
-                    if brightness > 35:
-                        braille |= 1 << dots[(dx, dy)]
-                        colors.append(pixel)
-
-            if colors:
-                # Average the colors of active pixels
-                r = sum(c[0] for c in colors) // len(colors)
-                g = sum(c[1] for c in colors) // len(colors)
-                b = sum(c[2] for c in colors) // len(colors)
-
-                style = Style(
-                    color=f"rgb({r},{g},{b})"
-                )
-
-                text.append(
-                    chr(0x2800 + braille),
-                    style=style
-                )
-            else:
-                text.append(" ")
+            text.append("▀", style=style)
 
         text.append("\n")
 
     return text
-
 
 def displayTrack(track):
 
@@ -91,7 +58,7 @@ def displayTrack(track):
         io.BytesIO(response.content)
     )
 
-    artwork = imageToText(image, width=30)
+    artwork = imageToText(image, width=40)
 
     # Track information
     info = Table.grid(padding=(0, 1))

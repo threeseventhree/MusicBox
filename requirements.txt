@@ -1,0 +1,7 @@
+shazamio
+requests
+python-dotenv
+rich
+pillow
+rich-pixels
+qrcode

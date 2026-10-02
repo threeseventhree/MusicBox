@@ -17,7 +17,7 @@ class SpotifyCallbackHandler(BaseHTTPRequestHandler):
             print("Spotify authorization successful!")
             print("Authorization code received.")
 
-            self.server.authorization_code = code
+            self.server.authorization_code = code # type: ignore
 
         self.send_response(200)
         self.send_header("Content-Type", "text/html")
@@ -45,11 +45,11 @@ def startCallbackServer():
         SpotifyCallbackHandler
     )
 
-    server.authorization_code = None
+    server.authorization_code = None # type: ignore
 
     print("Waiting for Spotify authorization...")
 
-    while server.authorization_code is None:
+    while server.authorization_code is None: # type: ignore
         server.handle_request()
 
-    return server.authorization_code
+    return server.authorization_code # type: ignore

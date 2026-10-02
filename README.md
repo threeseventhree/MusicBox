@@ -76,4 +76,11 @@ hardware.
 
 The main goal is not simply to assemble existing components, but to understand and build the different parts of the system myself — from the Python backend and APIs to the ESP32 firmware, electronics, and physical enclosure.
 
+### Installation (mainly for me):
+```
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
 ## -373
