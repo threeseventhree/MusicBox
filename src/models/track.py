@@ -6,4 +6,4 @@ class Track:
     artist: str
     album: str | None = None
     artworkURL: str | None = None
-    shazamUrl: str | None = None
+    songUrl: str | None = None
