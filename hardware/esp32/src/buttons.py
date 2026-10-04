@@ -1,7 +1,7 @@
 from machine import Pin # type: ignore
 from time import sleep
 
-class ButtonHandler():
+class ButtonHandler:
     def __init__(self):
         self.enterButton = Pin(19, Pin.IN, Pin.PULL_UP)
         self.scrollButton = Pin(18, Pin.IN, Pin.PULL_UP)

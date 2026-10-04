@@ -1,6 +1,6 @@
 from machine import Pin, I2C # type: ignore
 import ssd1306 # type: ignore
-class DisplayHandler():
+class DisplayHandler:
     def __init__(self):
         self.width = 128
         self.height = 64
@@ -25,3 +25,9 @@ class DisplayHandler():
                 self.display.text("> " + item, 0, y)
             else:
                 self.display.text("  " + item, 0, y)
+
+    def show(self):
+        self.display.show()
+
+    def fill(self, color):
+        self.display.fill(color)
