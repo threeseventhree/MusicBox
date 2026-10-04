@@ -37,21 +37,21 @@
       "id": "text1",
       "top": 182.4,
       "left": 172.8,
-      "attrs": { "text": "Recognize" }
+      "attrs": { "text": "Enter" }
     },
     {
       "type": "wokwi-text",
       "id": "text2",
       "top": 240,
       "left": 172.8,
-      "attrs": { "text": "Spotify" }
+      "attrs": { "text": "Scroll Down" }
     },
     {
       "type": "wokwi-text",
       "id": "text3",
       "top": 297.6,
       "left": 172.8,
-      "attrs": { "text": "Settings" }
+      "attrs": { "text": "Back" }
     }
   ],
   "connections": [
