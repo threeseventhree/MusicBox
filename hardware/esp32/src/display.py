@@ -1,22 +1,19 @@
-width = 128
-height = 64
-fontSize = 8
-yOffset = 8
+from machine import Pin, I2C # type: ignore
+import ssd1306 # type: ignore
+class DisplayHandler():
+    def __init__(self):
+        self.width = 128
+        self.height = 64
+        self.fontSize = 8
+        self.yOffset = 8
+        self.i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400000)
+        self.display = ssd1306.SSD1306_I2C(self.width, self.height, self.i2c)
 
-def displayCentered(text: str, y: int, display):
-    length = len(text)
-    lengthPixels = fontSize * length
-    centerXPos = int(width / 2)
-    x = centerXPos - int(lengthPixels / 2)
-    display.text(text, x, y)
+    def centerText(self, text: str, y: int):
+        length = len(text)
+        lengthPixels = self.fontSize * length
+        centerXPos = int(self.width / 2)
+        x = centerXPos - int(lengthPixels / 2)
+        self.display.text(text, x, y)
 
-def refreshMenu(menu: list, cursorPos: int, display):
-    display.fill(0)
-    displayCentered("MUSICBOX", 0, display)
-    for i, item in enumerate(menu):
-        y = yOffset + i * fontSize
-        if i == cursorPos:
-            display.text("> " + item, 0, y)
-        else:
-            display.text("  " + item, 0, y)
-    display.show()
+

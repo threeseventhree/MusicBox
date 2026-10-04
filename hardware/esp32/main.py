@@ -1,34 +1,39 @@
-from machine import Pin, I2C # type: ignore
+from machine import Pin # type: ignore
 from time import sleep
-import ssd1306 # type: ignore
-from src.display import refreshMenu
+from src.display import DisplayHandler
+from src.menu import handleMenuScreen
+from src.recognize import handleRecognizeScreen
 
 button1 = Pin(19, Pin.IN, Pin.PULL_UP)
 button2 = Pin(18, Pin.IN, Pin.PULL_UP)
 button3 = Pin(17, Pin.IN, Pin.PULL_UP)
-width = 128
-height = 64
-fontSize = 8
-yOffset = 8
 cursorPos = 0
-i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400000)
-display = ssd1306.SSD1306_I2C(width, height, i2c)
-
+displayHandler = DisplayHandler()
+screens = ["recognize", "spotify", "settings"]
+screen = "menu"
 menu = ["Recognize", "Spotify", "Settings"]
 
-refreshMenu(menu, cursorPos, display)
+def waitForRelease(button):
+    while not button.value():
+        sleep(0.01)
+
+handleMenuScreen(menu, displayHandler, cursorPos)
 # void loop
 while True:
     if not button1.value():
-        print("Button 1 - Enter")
+        if(cursorPos == 0):
+            handleRecognizeScreen(displayHandler)
+            screen = screens[0]
+        waitForRelease(button1)
 
     if not button2.value():
         cursorPos += 1
-        if cursorPos >= len(menu):
-            cursorPos = 0
-        refreshMenu(menu, cursorPos, display)
+        if cursorPos >= len(menu): cursorPos = 0
+        handleMenuScreen(menu, displayHandler, cursorPos)
+        waitForRelease(button2)
 
     if not button3.value():
-        print("Button 3 - Back")
-
-    sleep(0.1)
+        if(screen != "menu"):
+            handleMenuScreen(menu, displayHandler, cursorPos)
+            screen = "menu"
+        waitForRelease(button3)
