@@ -1,39 +1,46 @@
-from machine import Pin # type: ignore
-from time import sleep
+from src.buttons import ButtonHandler
 from src.display import DisplayHandler
 from src.menu import handleMenuScreen
 from src.recognize import handleRecognizeScreen
+from src.spotify import handleSpotifyScreen # type: ignore
+from src.settings import handleSettingsScreen
+menuCursor = 0
+spotifyCursor = 0
+settingsCursor = 0
 
-button1 = Pin(19, Pin.IN, Pin.PULL_UP)
-button2 = Pin(18, Pin.IN, Pin.PULL_UP)
-button3 = Pin(17, Pin.IN, Pin.PULL_UP)
-cursorPos = 0
 displayHandler = DisplayHandler()
-screens = ["recognize", "spotify", "settings"]
-screen = "menu"
-menu = ["Recognize", "Spotify", "Settings"]
+buttonHandler = ButtonHandler()
 
-def waitForRelease(button):
-    while not button.value():
-        sleep(0.01)
-
-handleMenuScreen(menu, displayHandler, cursorPos)
-# void loop
+handleMenuScreen(displayHandler, menuCursor)
 while True:
-    if not button1.value():
-        if(cursorPos == 0):
+    if not buttonHandler.enterButton.value():
+        if menuCursor == 0:
             handleRecognizeScreen(displayHandler)
-            screen = screens[0]
-        waitForRelease(button1)
+            displayHandler.screen = displayHandler.screens[0]
+        elif menuCursor == 1:
+            handleSpotifyScreen(displayHandler, spotifyCursor)
+            displayHandler.screen = displayHandler.screens[1]
+        elif menuCursor == 2:
+            handleSettingsScreen(displayHandler, settingsCursor)
+            displayHandler.screen = displayHandler.screens[2]
+        buttonHandler.waitForRelease(buttonHandler.enterButton)
 
-    if not button2.value():
-        cursorPos += 1
-        if cursorPos >= len(menu): cursorPos = 0
-        handleMenuScreen(menu, displayHandler, cursorPos)
-        waitForRelease(button2)
+    if not buttonHandler.scrollButton.value():
+        if displayHandler.screen == "menu":
+            menuCursor += 1
+            if menuCursor >= len(displayHandler.screens): menuCursor = 0
+            handleMenuScreen(displayHandler, menuCursor)
+        elif displayHandler.screen == "spotify":
+            spotifyCursor += 1
+            if spotifyCursor >= len(displayHandler.screens): spotifyCursor = 0
+            handleSpotifyScreen(displayHandler, spotifyCursor)
+            pass
+        elif displayHandler.screen == "settings":
+            pass
+        buttonHandler.waitForRelease(buttonHandler.scrollButton)
 
-    if not button3.value():
-        if(screen != "menu"):
-            handleMenuScreen(menu, displayHandler, cursorPos)
-            screen = "menu"
-        waitForRelease(button3)
+    if not buttonHandler.backButton.value():
+        if(displayHandler.screen != "menu"):
+            handleMenuScreen(displayHandler, menuCursor)
+            displayHandler.screen = "menu"
+        buttonHandler.waitForRelease(buttonHandler.backButton)

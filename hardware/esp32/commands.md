@@ -9,6 +9,8 @@ mpremote connect port:rfc2217://localhost:4000 fs cp src/display.py :src/display
 mpremote connect port:rfc2217://localhost:4000 fs cp src/menu.py :src/menu.py
 mpremote connect port:rfc2217://localhost:4000 fs cp src/buttons.py :src/buttons.py
 mpremote connect port:rfc2217://localhost:4000 fs cp src/recognize.py :src/recognize.py
+mpremote connect port:rfc2217://localhost:4000 fs cp src/spotify.py :src/spotify.py
+mpremote connect port:rfc2217://localhost:4000 fs cp src/settings.py :src/settings.py
 
 mpremote connect port:rfc2217://localhost:4000 fs cp main.py :main.py
 ```
