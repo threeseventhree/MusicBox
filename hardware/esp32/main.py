@@ -1,3 +1,4 @@
+from time import sleep
 from src.buttons import ButtonHandler
 from src.display import DisplayHandler
 from src.menuScreen import MenuScreen
@@ -7,7 +8,6 @@ from src.spotifyService import SpotifyService
 from src.settingsScreen import SettingsScreen
 from src.wifi import WiFiHandler
 from src.api import APIHandler
-from time import sleep
 
 wifiHandler = WiFiHandler()
 wifiHandler.connect()

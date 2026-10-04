@@ -1,9 +1,11 @@
 from src.display import DisplayHandler
 from src.spotifyService import SpotifyService
+from src.qr import QRHandler
 class SpotifyScreen:
     def __init__(self, displayHandler: DisplayHandler, spotifyService: SpotifyService):
         self.displayHandler = displayHandler
         self.spotifyService = spotifyService
+        self.qrHandler = QRHandler(displayHandler)
         self.cursorPos = 0
         self.options = ["Now Playing", "Connect", "Disconnect"]
         self.connected = False
@@ -44,11 +46,24 @@ class SpotifyScreen:
         self.displayHandler.show()
 
     def connect(self):
+        print("Spotify connect started")
+    
         self.displayHandler.fill(0)
         self.displayHandler.centerText("Connecting...", 24)
         self.displayHandler.show()
+    
+        print("Requesting auth URL...")
         response = self.spotifyService.connect()
+    
+        print("Response received:")
         print(response)
+    
+        authUrl = response["auth_url"]
+    
+        print("Displaying QR...")
+        self.qrHandler.display(authUrl)
+    
+        print("QR displayed")
 
     def disconnect(self):
         self.connected = False
