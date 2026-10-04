@@ -1,9 +1,13 @@
 from src.display import DisplayHandler
+from src.spotifyService import SpotifyService
 class SpotifyScreen:
-    def __init__(self, displayHandler: DisplayHandler):
+    def __init__(self, displayHandler: DisplayHandler, spotifyService: SpotifyService):
         self.displayHandler = displayHandler
+        self.spotifyService = spotifyService
         self.cursorPos = 0
         self.options = ["Now Playing", "Connect", "Disconnect"]
+        self.connected = False
+        self.nowPlayingActive = False
 
     def show(self):
         self.displayHandler.fill(0)
@@ -25,10 +29,37 @@ class SpotifyScreen:
             self.disconnect()
 
     def nowPlaying(self):
-        print("Testing nowPlaying")
+        if not self.connected:
+            self.displayHandler.fill(0)
+            self.displayHandler.centerText("Spotify", 0)
+            self.displayHandler.centerText("Not Connected", 24)
+            self.displayHandler.show()
+            return
+
+        self.nowPlayingActive = True
+
+        self.displayHandler.fill(0)
+        self.displayHandler.centerText("Now Playing", 0)
+        self.displayHandler.centerText("Waiting...", 24)
+        self.displayHandler.show()
 
     def connect(self):
-        print("Testing connect")
+        self.displayHandler.fill(0)
+        self.displayHandler.centerText("Connecting...", 24)
+        self.displayHandler.show()
+        response = self.spotifyService.connect()
+        print(response)
 
     def disconnect(self):
-        print("Testing disconnect")
+        self.connected = False
+        self.nowPlayingActive = False
+
+        self.displayHandler.fill(0)
+        self.displayHandler.centerText("Spotify", 0)
+        self.displayHandler.centerText("Disconnected", 24)
+        self.displayHandler.show()
+
+    def update(self):
+        if not self.nowPlayingActive:
+            return
+        #spotify api 
