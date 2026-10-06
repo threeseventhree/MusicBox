@@ -6,6 +6,9 @@ class SpotifyClient:
         response.raise_for_status()
         return response.json()["sessionID"]
 
+    def getConnectURL(self, sessionID: str):
+        return f"{self.BASE_URL}/connect/{sessionID}"
+
     def getStatus(self, sessionID: str):
         response = requests.get(f"{self.BASE_URL}/api/sessions/{sessionID}")
         response.raise_for_status()

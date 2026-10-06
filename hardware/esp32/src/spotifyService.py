@@ -1,16 +1,22 @@
-from src.api import APIHandler
 class SpotifyService:
-    def __init__(self, apiHandler: APIHandler):
-        self.apiHandler = apiHandler
-
-    def getStatus(self):
-        return self.apiHandler.get("/spotify/status")
+    def __init__(self, apiClient):
+        self.apiClient = apiClient
+        self.sessionID = None
 
     def connect(self):
-        return self.apiHandler.get("/spotify/connect")
+        response = self.apiClient.get("/spotify/connect")
+        self.sessionID = response["session_id"]
+        return response
 
-    def disconnect(self):
-        return self.apiHandler.post("/spotify/disconnect")
+    def isConnected(self):
+        if not self.sessionID:
+            return False
+        status = self.apiClient.get("/spotify/status")
+        return status["connected"]
 
     def getCurrentlyPlaying(self):
-        return self.apiHandler.get("/spotify/currently-playing")
+        if not self.sessionID:
+            return None
+        return self.apiClient.get(
+            "/spotify/currently-playing"
+        )

@@ -34,3 +34,6 @@ class DisplayHandler:
 
     def fillRect(self, x, y, width, height, color):
         self.display.fill_rect(x, y, width, height, color)
+
+    def text(self, text: str, x: int, y: int):
+        self.display.text(text, x, y)

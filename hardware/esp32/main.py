@@ -12,15 +12,14 @@ from src.api import APIHandler
 wifiHandler = WiFiHandler()
 wifiHandler.connect()
 sleep(1)
-api = APIHandler("http://host.wokwi.internal:8000")
-spotifyService = SpotifyService(api)
-print(spotifyService.getStatus())
-
+spotifyClient = APIHandler("http://host.wokwi.internal:8000")
+spotifyService = SpotifyService(spotifyClient)
 displayHandler = DisplayHandler()
+spotifyScreen = SpotifyScreen(displayHandler,spotifyService)
+
 buttonHandler = ButtonHandler()
 menuScreen = MenuScreen(displayHandler)
 recognizeScreen = RecognizeScreen(displayHandler)
-spotifyScreen = SpotifyScreen(displayHandler, spotifyService)
 settingsScreen = SettingsScreen(displayHandler)
 
 menuScreen.show()
