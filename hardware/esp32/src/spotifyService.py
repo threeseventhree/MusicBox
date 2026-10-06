@@ -2,6 +2,8 @@ class SpotifyService:
     def __init__(self, apiClient):
         self.apiClient = apiClient
         self.sessionID = None
+        self.currentArtworkURL = None
+        self.currentArtwork = None
 
     def connect(self):
         response = self.apiClient.get("/spotify/connect")

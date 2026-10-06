@@ -37,3 +37,6 @@ class DisplayHandler:
 
     def text(self, text: str, x: int, y: int):
         self.display.text(text, x, y)
+
+    def blit(self, bitmap, x, y):
+        self.display.blit(bitmap, x, y)
