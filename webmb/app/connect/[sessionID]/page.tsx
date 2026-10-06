@@ -1,10 +1,23 @@
-import { createSession } from "@/app/lib/sessionStore"
 import crypto from "crypto"
+import { createSession } from "@/app/lib/sessionStore"
 import { redirect } from "next/navigation"
-//get the session id and assign it to a session, generate a state which will be kept and passed throughout our browsing experience.
-export default async function ConnectPage({params}: {params: Promise<{sessionID: string}>}) {
+
+export default async function ConnectPage({params}: {params: Promise<{ sessionID: string }>}) {
     const { sessionID } = await params
     const state = crypto.randomBytes(16).toString("hex")
     await createSession(sessionID, state)
-    redirect(`/api/fake-spotify?sessionID=${sessionID}&state=${state}`)
+    const clientID = process.env.SPOTIFY_CLIENT_ID
+    const redirectURI = process.env.SPOTIFY_REDIRECT_URI
+    if (!clientID || !redirectURI) {throw new Error("Spotify environment variables are missing")}
+    const spotifyParams = new URLSearchParams({
+        client_id: clientID,
+        response_type: "code",
+        redirect_uri: redirectURI,
+        state: state,
+        scope: "user-read-currently-playing"
+    })
+
+    redirect(
+        `https://accounts.spotify.com/authorize?${spotifyParams.toString()}`
+    )
 }
