@@ -12,7 +12,7 @@ from src.api import APIHandler
 wifiHandler = WiFiHandler()
 wifiHandler.connect()
 sleep(1)
-spotifyClient = APIHandler("http://host.wokwi.internal:8000")
+spotifyClient = APIHandler("https://musicbox-kohl.vercel.app")
 spotifyService = SpotifyService(spotifyClient)
 displayHandler = DisplayHandler()
 spotifyScreen = SpotifyScreen(displayHandler,spotifyService)

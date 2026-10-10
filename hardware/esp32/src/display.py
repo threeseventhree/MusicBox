@@ -1,13 +1,13 @@
 from machine import Pin, I2C # type: ignore
-import ssd1306 # type: ignore
+import sh1106 # type: ignore
 class DisplayHandler:
     def __init__(self):
         self.width = 128
         self.height = 64
         self.fontSize = 8
         self.yOffset = 8
-        self.i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400000)
-        self.display = ssd1306.SSD1306_I2C(self.width, self.height, self.i2c)
+        self.i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100000)
+        self.display = sh1106.SH1106_I2C(self.width, self.height, self.i2c, rotate = 180)
         self.screens = ["recognize", "spotify", "settings"]
         self.screen = "menu"
 
@@ -36,7 +36,7 @@ class DisplayHandler:
         self.display.fill_rect(x, y, width, height, color)
 
     def text(self, text: str, x: int, y: int):
-        self.display.text(text, x, y)
+        self.display.text(text, x, y, 1)
 
     def blit(self, bitmap, x, y):
         self.display.blit(bitmap, x, y)
